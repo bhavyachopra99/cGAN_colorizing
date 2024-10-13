@@ -19,7 +19,7 @@ def preprocess_image(image):
 def rgb_to_grayscale(image):
     return tf.image.rgb_to_grayscale(image)
 
-def load_and_preprocess_data(split='train', batch_size=32, num_samples=1000):
+def load_and_preprocess_data(split='train', batch_size=32, num_samples=4000):
     """
     Load and preprocess CIFAR-10 dataset.
 
@@ -44,7 +44,7 @@ def load_and_preprocess_data(split='train', batch_size=32, num_samples=1000):
 
         dataset = dataset.map(preprocess_and_update, num_parallel_calls=tf.data.AUTOTUNE)
         dataset = dataset.map(lambda img_color, img_color2: (rgb_to_grayscale(img_color), img_color2), num_parallel_calls=tf.data.AUTOTUNE)
-        dataset = dataset.batch(batch_size).shuffle(1000).prefetch(tf.data.AUTOTUNE)
+        dataset = dataset.batch(batch_size).shuffle(4000).prefetch(tf.data.AUTOTUNE)
 
     return dataset
 
@@ -301,7 +301,7 @@ def main():
         writer.writerow(['Epoch', 'SSIM', 'PSNR'])
     
     # Load and preprocess data
-    train_dataset = load_and_preprocess_data(split='train', batch_size=32, num_samples=5000)
+    train_dataset = load_and_preprocess_data(split='train', batch_size=32, num_samples=4000)
     test_dataset = load_and_preprocess_data(split='test', batch_size=32, num_samples=100)
     
     # Build models

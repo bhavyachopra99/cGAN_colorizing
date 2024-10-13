@@ -19,7 +19,7 @@ def preprocess_image(image):
 def rgb_to_grayscale(image):
     return tf.image.rgb_to_grayscale(image)
 
-def load_and_preprocess_data(split='train', batch_size=32, num_samples=5000):
+def load_and_preprocess_data(split='train', batch_size=32, num_samples=10000):
     """
     Load and preprocess CIFAR-10 dataset.
 
@@ -44,7 +44,7 @@ def load_and_preprocess_data(split='train', batch_size=32, num_samples=5000):
 
         dataset = dataset.map(preprocess_and_update, num_parallel_calls=tf.data.AUTOTUNE)
         dataset = dataset.map(lambda img_color, img_color2: (rgb_to_grayscale(img_color), img_color2), num_parallel_calls=tf.data.AUTOTUNE)
-        dataset = dataset.batch(batch_size).shuffle(5000).prefetch(tf.data.AUTOTUNE)
+        dataset = dataset.batch(batch_size).shuffle(10000).prefetch(tf.data.AUTOTUNE)
 
     return dataset
 
@@ -146,7 +146,7 @@ def train_step(input_image, target, generator, discriminator, generator_optimize
     return gen_total_loss, disc_loss
 
 # 5. Image Generation and Saving
-def generate_and_save_images(model, epoch, test_input, output_dir='output_5000', max_images=16):
+def generate_and_save_images(model, epoch, test_input, output_dir='output_10000', max_images=16):
     predictions = model(test_input, training=False)
     
     num_images = min(predictions.shape[0], max_images)
@@ -234,7 +234,7 @@ def calculate_metrics(real_images, generated_images, win_size=5):
     return np.mean(ssim_scores), np.mean(psnr_scores)
 
 # 7. Plotting Functions
-def plot_losses(csv_path, output_dir='output_5000'):
+def plot_losses(csv_path, output_dir='output_10000'):
     epochs = []
     gen_losses = []
     disc_losses = []
@@ -257,7 +257,7 @@ def plot_losses(csv_path, output_dir='output_5000'):
     plt.savefig(os.path.join(output_dir, 'losses_plot.png'))
     plt.close()
 
-def plot_metrics(csv_path, output_dir='output_5000'):
+def plot_metrics(csv_path, output_dir='output_10000'):
     epochs = []
     ssim_scores = []
     psnr_scores = []
@@ -283,7 +283,7 @@ def plot_metrics(csv_path, output_dir='output_5000'):
 # 8. Main Execution
 def main():
     # Create a directory to save CSVs and images if not exists
-    output_dir = 'output_5000'
+    output_dir = 'output_10000'
     os.makedirs(output_dir, exist_ok=True)
     
     # Initialize CSV files
@@ -301,7 +301,7 @@ def main():
         writer.writerow(['Epoch', 'SSIM', 'PSNR'])
     
     # Load and preprocess data
-    train_dataset = load_and_preprocess_data(split='train', batch_size=32, num_samples=5000)
+    train_dataset = load_and_preprocess_data(split='train', batch_size=32, num_samples=10000)
     test_dataset = load_and_preprocess_data(split='test', batch_size=32, num_samples=100)
     
     # Build models

@@ -301,7 +301,7 @@ def main():
         writer.writerow(['Epoch', 'SSIM', 'PSNR'])
     
     # Load and preprocess data
-    train_dataset = load_and_preprocess_data(split='train', batch_size=32, num_samples=5000)
+    train_dataset = load_and_preprocess_data(split='train', batch_size=32, num_samples=1000)
     test_dataset = load_and_preprocess_data(split='test', batch_size=32, num_samples=100)
     
     # Build models
